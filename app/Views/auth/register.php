@@ -38,7 +38,7 @@
 						</form>
 						<hr>
 						<div class="text-center">
-							<a class="small" href="/auth">Already have an account? Login!</a>
+							<p>Already have an account? <a class="small" href="/auth">Login!</a></p>
 						</div>
 					</div>
 				</div>

@@ -24,7 +24,7 @@
 								<form class="user" action="/auth/login" method="POST">
 									<?= csrf_field(); ?>
 									<div class="form-group">
-										<input type="text" class="form-control form-control-user" id="uname" name="uname" placeholder="Enter Username...">
+										<input type="text" class="form-control form-control-user" id="uname" name="uname" placeholder="Enter Username">
 										<?= $validation->getError('uname'); ?>
 									</div>
 									<div class="form-group">

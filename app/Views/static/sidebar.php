@@ -1,4 +1,3 @@
-<!-- Query Menu -->
 <?php
 
 $db = \Config\Database::connect();
@@ -54,8 +53,9 @@ $menu = $db->query($queryMenu)->getResultArray();
 		?>
 
 		<?php foreach ($subMenu as $sm) : ?>
+
 			<li class="nav-item">
-				<a class="nav-link collapsed" href="<?= $sm['url'] ?>" <?= ($sm['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= $sm['tittle'] ?>" aria-expanded="true" aria-controls="collapseTwo">
+				<a class="nav-link collapsed" href="<?= $sm['url'] ?>" <?= ($sm['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace(' ', '', $sm['tittle']) ?>" aria-expanded="true" aria-controls="<?= str_replace(' ', '', $sm['tittle']) ?>">
 					<i class="<?= $sm['icon'] ?>"></i>
 					<span><?= $sm['tittle'] ?></span>
 				</a>
@@ -69,12 +69,13 @@ $menu = $db->query($queryMenu)->getResultArray();
 
 				?>
 
-				<div id="<?= $sm['tittle'] ?>" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-					<?php foreach ($subSubMenu as $ssb) : ?>
-						<div class="bg-white py-2 collapse-inner rounded">
-							<a class="collapse-item" href="#"><?= $ssb['tittle'] ?></a>
-						</div>
-					<?php endforeach; ?>
+				<div id="<?= str_replace(' ', '', $sm['tittle']) ?>" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+					<div class="bg-white py-2 collapse-inner rounded">
+						<?php foreach ($subSubMenu as $ssb) : ?>
+							<a class="collapse-item text-wrap" href="#"><?= $ssb['tittle'] ?>
+							</a>
+						<?php endforeach; ?>
+					</div>
 				</div>
 
 			</li>
