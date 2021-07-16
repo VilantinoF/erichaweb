@@ -6,6 +6,6 @@ use CodeIgniter\Model;
 
 class SubFolderModel extends Model
 {
-    protected $table = 'sub_sub_menu';
-    protected $allowedFields = ['tittle', 'sub_menu_id'];
+    protected $table = 'sub_folder';
+    protected $allowedFields = ['tittle', 'url', 'folder_id'];
 }

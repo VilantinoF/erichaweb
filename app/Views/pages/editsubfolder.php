@@ -23,10 +23,13 @@
                         <input type="text" class="form-control" placeholder="Nama Sub Folder" name="tittle" value="<?= $subFolderById['tittle']; ?>">
                     </div>
                     <div class="mb-3">
+                        <input type="text" class="form-control" placeholder="URL" name="url" value="<?= $subFolderById['url']; ?>">
+                    </div>
+                    <div class="mb-3">
                         <select class="form-select" name="folderId">
                             <?php foreach ($folder as $f) : ?>
                                 <?php if (!$f['url']) : ?>
-                                    <option value="<?= $f['id'] ?>" <?= ($subFolderById['sub_menu_id'] == $f['id']) ? 'selected' : ''; ?>><?= $f['tittle'] ?></option>
+                                    <option value="<?= $f['id'] ?>" <?= ($subFolderById['folder_id'] == $f['id']) ? 'selected' : ''; ?>><?= $f['tittle'] ?></option>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </select>

@@ -5,7 +5,7 @@ namespace App\Controllers;
 class Pages extends BaseController
 {
 
-  protected $db, $folderModel, $menuModel, $validation, $subFolderModel;
+  protected $db, $pager, $folderModel, $menuModel, $validation, $subFolderModel, $subSubFolderModel;
 
   public function __construct()
   {
@@ -13,7 +13,9 @@ class Pages extends BaseController
     $this->menuModel = model('App\Models\MenuModel');
     $this->folderModel = model('App\Models\FolderModel');
     $this->subFolderModel = model('App\Models\SubFolderModel');
+    $this->subSubFolderModel = model('App\Models\SubSubFolderModel');
     $this->validation =  \Config\Services::validation();
+    $this->pager = \Config\Services::pager();
   }
 
   public function index()
@@ -110,9 +112,11 @@ class Pages extends BaseController
   public function addSubFolder()
   {
 
+    // dd($this->request->getVar('folderId'));
     $this->subFolderModel->save([
-      'tittle' => $this->request->getVar('namaFolder'),
-      'sub_menu_id' => $this->request->getVar('folderId'),
+      'tittle' => $this->request->getVar('tittle'),
+      'url' => $this->request->getVar('url'),
+      'folder_id' => $this->request->getVar('folderId'),
     ]);
 
     session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -144,7 +148,8 @@ class Pages extends BaseController
     if ($this->request->getPost()) {
       $data = [
         'tittle' => $this->request->getVar('tittle'),
-        'sub_menu_id' =>  $this->request->getVar('folderId'),
+        'url' => $this->request->getVar('url'),
+        'folder_id' =>  $this->request->getVar('folderId'),
       ];
       $subFolderId = $this->request->getVar('id');
       $this->subFolderModel->update($subFolderId, $data);
@@ -156,5 +161,74 @@ class Pages extends BaseController
     }
 
     return view('pages/editsubfolder', $data);
+  }
+
+
+  public function manageSubSubFolder()
+  {
+    $data = [
+      'tittle' => 'Manage Sub Sub Folder',
+      'subSubFolder' => $this->subSubFolderModel->findAll(),
+      'subFolder' => $this->subFolderModel->findAll(),
+      'folder' => $this->folderModel->findAll(),
+    ];
+    return view('pages/managesubsubfolder', $data);
+  }
+
+  public function addSubSubFolder()
+  {
+
+    if (!$this->request->getVar('namaSubSubFolder') === 'Jurusan Administrasi Bisnis') {
+      $parsing = explode(' ', $this->request->getVar('namaSubSubFolder'));
+      $url = $parsing['1'];
+    }
+    $url = 'adbis';
+    $this->subSubFolderModel->save([
+      'tittle' => $this->request->getVar('namaSubSubFolder'),
+      'url' => $url,
+      'sub_folder_id' => $this->request->getVar('subFolderId'),
+    ]);
+
+    session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Folder berhasil ditambahkan</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+    return redirect()->to('pages/managesubsubfolder');
+  }
+
+  public function deleteSubSubFolder($id)
+  {
+    $this->subSubFolderModel->delete($id);
+    session()->setFlashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Sub Sub Folder berhasil dihapus</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+    return redirect()->to('pages/manageSubSubFolder');
+  }
+
+  public function editSubSubFolder($id = null)
+  {
+    $data = [
+      'tittle' => 'Edit Sub Sub Folder',
+      'subFolder' =>  $this->subFolderModel->findAll(),
+      'subSubFolderById' => $this->subSubFolderModel->getWhere(['id' => $id])->getRowArray(),
+    ];
+
+    if ($this->request->getPost()) {
+      $data = [
+        'tittle' => $this->request->getVar('tittle'),
+        'url' => $this->request->getVar('url'),
+        'sub_folder_id' =>  $this->request->getVar('subFolderId'),
+      ];
+      $subSubFolderId = $this->request->getVar('id');
+      $this->subSubFolderModel->update($subSubFolderId, $data);
+      session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Sub Sub Folder berhasil di edit</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+      return redirect()->to('pages/manageSubSubFolder');
+    }
+
+    return view('pages/editsubsubfolder', $data);
   }
 }

@@ -32,7 +32,7 @@
                     <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Nama Sub Folder</th>
+                            <th scope="col">Nama Sub Sub Folder</th>
                             <th scope="col">URL</th>
                             <th scope="col">Parent Folder</th>
                             <th scope="col">Aksi</th>
@@ -41,35 +41,43 @@
                     <tbody>
 
                         <?php $i = 1 ?>
-                        <?php foreach ($subFolder as $sf) : ?>
+                        <?php foreach ($subSubFolder as $ssf) : ?>
                             <?php
 
                             $db = \Config\Database::connect();
 
-                            $folderId = $sf['folder_id'];
+                            $subFolderId = $ssf['sub_folder_id'];
 
-                            $query = "SELECT `folder`.`tittle`
-				                        FROM `sub_folder` JOIN `folder`
-				                        ON `folder`.`id` = $folderId
-			                            ORDER BY `folder`.`id` ASC
+
+                            $query = "SELECT `sub_folder`.`tittle`, `folder`.`tittle` as `foldert`
+				                        FROM `sub_sub_folder` JOIN `sub_folder`
+				                        ON `sub_folder`.`id` = $subFolderId
+                                        JOIN `folder` ON `sub_folder`.`folder_id` = `folder`.`id`
+			                            ORDER BY `sub_folder`.`id` ASC
 			                            ";
 
-                            $menu = $db->query($query)->getRowArray();
+                            $result = $db->query($query)->getRowArray();
+                            // dd($result);
                             ?>
+
+
 
                             <tr>
                                 <th scope="row"><?= $i++ ?></th>
-                                <td><?= $sf['tittle']; ?></td>
-                                <td><?= $sf['url']; ?></td>
-                                <td><?= $menu['tittle']; ?></td>
+                                <td><?= $ssf['tittle']; ?></td>
+                                <td><?= $ssf['url']; ?></td>
+                                <td><?= $result['foldert'] . ' / ' . $result['tittle']; ?></td>
                                 <td>
-                                    <a class="badge badge-danger" href="<?= base_url('pages/deletesubfolder/' . $sf['id']) ?>">Hapus</a>
-                                    <a class="badge badge-warning" href="<?= base_url('pages/editsubfolder/' . $sf['id']) ?>">Edit</a>
+                                    <a class="badge badge-danger" href="<?= base_url('pages/deletesubsubfolder/' . $ssf['id']) ?>">Hapus</a>
+                                    <a class="badge badge-warning" href="<?= base_url('pages/editsubsubfolder/' . $ssf['id']) ?>">Edit</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <nav aria-label="...">
+
+                </nav>
 
             </div>
 
@@ -85,23 +93,39 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Tambah Sub Folder</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Tambah Sub Sub Folder</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
-                <form action="<?= base_url('pages/addSubFolder') ?>" method="POST">
+                <form action="<?= base_url('pages/addSubSubFolder') ?>" method="POST">
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Nama Folder" name="tittle">
+                        <input type="text" class="form-control" placeholder="Nama Sub Sub Folder" name="namaSubSubFolder">
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="url" name="url">
+                        <input type="text" class="form-control" placeholder="URL" name="url">
                     </div>
                     <div class="mb-3">
-                        <select class="form-select" name="folderId">
-                            <?php foreach ($folder as $f) : ?>
-                                <?php if (!$f['url']) : ?>
-                                    <option value="<?= $f['id'] ?>"><?= ($f['url']) ?: $f['tittle']  ?></option>
+                        <select class="form-select" name="subFolderId">
+                            <?php foreach ($subFolder as $sf) : ?>
+
+                                <?php
+
+                                $folderId = $sf['folder_id'];
+
+
+                                $query = "SELECT `folder`.`tittle`, `folder`.`url`
+				                        FROM `sub_folder` JOIN `folder`
+				                        ON `folder`.`id` = $folderId
+			                            ORDER BY `sub_folder`.`id` ASC
+			                            ";
+
+                                $result = $db->query($query)->getRowArray();
+
+                                ?>
+
+                                <?php if (!$result['url']) : ?>
+                                    <option value="<?= $sf['id'] ?>"><?= $result['tittle'] . ' / ' . $sf['tittle'] ?></option>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </select>
