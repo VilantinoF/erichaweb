@@ -23,9 +23,45 @@ class Elektro extends BaseController
 
     public function index()
     {
+        $session = session();
+        if ($session->get('role') == 3) {
+            $parsing = explode('/', uri_string());
+            if (!empty($parsing[1]) and !empty($parsing[2]) and !empty($parsing[3])) {
+                $folderId = $parsing[1];
+                $subFolderId = $parsing[2];
+                $subSubFolderId = $parsing[3];
+                $query = "SELECT * FROM files
+                    WHERE folder_id = $folderId
+                    AND sub_folder_id = $subFolderId
+                    AND sub_sub_folder_id = $subSubFolderId
+                    ORDER BY id ASC
+                ";
+            } elseif (!empty($parsing[1]) and !empty($parsing[2])) {
+                $folderId = $parsing[1];
+                $subFolderId = $parsing[2];
+                $query = "SELECT * FROM files
+                    WHERE folder_id = $folderId
+                    AND sub_folder_id = $subFolderId
+                    ORDER BY id ASC
+                ";
+            } else {
+                $folderId = $parsing[1];
+                $query = "SELECT * FROM files
+                    WHERE folder_id = $folderId
+                    ORDER BY id ASC
+                ";
+            }
+
+            $result = $this->filesModel->query($query)->getResultArray();
+
+            $data = [
+                'tittle' => 'Administrasi Bisnis',
+                'files' => $result,
+            ];
+            return view('user/dosen/elektro', $data);
+        }
 
         $parsing = explode('/', uri_string());
-        // dd($parsing);
         if (!empty($parsing[1]) and !empty($parsing[2]) and !empty($parsing[3])) {
             $folderId = $parsing[1];
             $subFolderId = $parsing[2];
@@ -58,7 +94,7 @@ class Elektro extends BaseController
             'tittle' => 'Administrasi Bisnis',
             'files' => $result,
         ];
-        return view('pages/akreditasi/elektro', $data);
+        return view('user/admin/elektro', $data);
     }
 
 

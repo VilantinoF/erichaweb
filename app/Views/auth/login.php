@@ -1,4 +1,4 @@
-<?= $this->extend('static/auth_default'); ?>
+<?= $this->extend('auth/templates/auth_default'); ?>
 
 <?= $this->section('content'); ?>
 

@@ -26,7 +26,7 @@ class Pages extends BaseController
     $data = [
       'tittle' => 'Admin',
     ];
-    return view('pages/home', $data);
+    return view('user/home', $data);
   }
 
   public function manageMenu()
@@ -39,7 +39,7 @@ class Pages extends BaseController
       'folder' => $this->folderModel->findAll(),
     ];
 
-    return view('pages/managemenu', $data);
+    return view('user/managemenu', $data);
   }
 
   public function addMenu()
@@ -94,7 +94,7 @@ class Pages extends BaseController
       return redirect()->to('pages/managemenu');
     }
 
-    return view('pages/editmenu', $data);
+    return view('user/editmenu', $data);
   }
 
   public function manageSubFolder()
@@ -106,7 +106,7 @@ class Pages extends BaseController
       'subFolder' => $this->subFolderModel->findAll(),
     ];
 
-    return view('pages/managesubfolder', $data);
+    return view('user/managesubfolder', $data);
   }
 
   public function addSubFolder()
@@ -160,19 +160,21 @@ class Pages extends BaseController
       return redirect()->to('pages/manageSubFolder');
     }
 
-    return view('pages/editsubfolder', $data);
+    return view('user/editsubfolder', $data);
   }
 
 
   public function manageSubSubFolder()
   {
+    // $page = $this->subSubFolderModel->get()->getNumRows();
     $data = [
       'tittle' => 'Manage Sub Sub Folder',
       'subSubFolder' => $this->subSubFolderModel->findAll(),
+      // 'pager' => $this->subSubFolderModel->pager,
       'subFolder' => $this->subFolderModel->findAll(),
       'folder' => $this->folderModel->findAll(),
     ];
-    return view('pages/managesubsubfolder', $data);
+    return view('user/managesubsubfolder', $data);
   }
 
   public function addSubSubFolder()
@@ -229,6 +231,6 @@ class Pages extends BaseController
       return redirect()->to('pages/manageSubSubFolder');
     }
 
-    return view('pages/editsubsubfolder', $data);
+    return view('user/editsubsubfolder', $data);
   }
 }

@@ -1,11 +1,11 @@
-<?= $this->extend('static/default'); ?>
+<?= $this->extend('templates/default'); ?>
 
 <?= $this->section('content'); ?>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- sidebar -->
-    <?= $this->include('static/sidebar'); ?>
+    <?= $this->include('templates/sidebar'); ?>
     <!-- endsidebar -->
 
     <!-- Content Wrapper -->
@@ -15,7 +15,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <?= $this->include('static/topbar') ?>
+            <?= $this->include('templates/topbar') ?>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -54,11 +54,11 @@
                                         <tr>
                                             <td><?= $i++ ?></td>
                                             <td>
-                                                <a href="<?= base_url('Adbis/downloadfile') . '/' . $f['id'] ?>"><?= $f['file'] ?></a>
+                                                <a href="<?= base_url('Sipil/downloadfile') . '/' . $f['id'] ?>"><?= $f['file'] ?></a>
                                             </td>
                                             <td><?= $f['uploaded_at'] ?></td>
                                             <td>
-                                                <a href="<?= base_url('Adbis/deleteFile' . '/' . $f['id']) ?>">Delete</a>
+                                                <a href="<?= base_url('Sipil/deleteFile' . '/' . $f['id']) ?>">Delete</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -88,7 +88,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="<?= base_url('adbis/addFile') ?>" method="POST" enctype="multipart/form-data">
+                <form action="<?= base_url('Sipil/addFile') ?>" method="POST" enctype="multipart/form-data">
                     <?php
                     $parsing = explode('/', uri_string());
                     // dd($parsing);

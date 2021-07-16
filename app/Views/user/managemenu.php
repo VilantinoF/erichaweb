@@ -1,10 +1,10 @@
-<?= $this->extend('static/default'); ?>
+<?= $this->extend('templates/default'); ?>
 
 <?= $this->section('content'); ?>
 <div id="wrapper">
 
     <!-- sidebar -->
-    <?= $this->include('static/sidebar'); ?>
+    <?= $this->include('templates/sidebar'); ?>
     <!-- endsidebar -->
 
     <div id="content-wrapper" class="d-flex flex-column">
@@ -12,7 +12,7 @@
         <!-- Main Content -->
         <div id="content">
 
-            <?= $this->include('static/topbar') ?>
+            <?= $this->include('templates/topbar') ?>
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
@@ -32,39 +32,23 @@
                     <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Nama Sub Folder</th>
+                            <th scope="col">Icon</th>
+                            <th scope="col">Nama Folder</th>
                             <th scope="col">URL</th>
-                            <th scope="col">Parent Folder</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         <?php $i = 1 ?>
-                        <?php foreach ($subFolder as $sf) : ?>
-                            <?php
-
-                            $db = \Config\Database::connect();
-
-                            $folderId = $sf['folder_id'];
-
-                            $query = "SELECT `folder`.`tittle`
-				                        FROM `sub_folder` JOIN `folder`
-				                        ON `folder`.`id` = $folderId
-			                            ORDER BY `folder`.`id` ASC
-			                            ";
-
-                            $menu = $db->query($query)->getRowArray();
-                            ?>
-
+                        <?php foreach ($folder as $f) : ?>
                             <tr>
                                 <th scope="row"><?= $i++ ?></th>
-                                <td><?= $sf['tittle']; ?></td>
-                                <td><?= $sf['url']; ?></td>
-                                <td><?= $menu['tittle']; ?></td>
+                                <td><i class="<?= $f['icon']; ?>"></i></td>
+                                <td><?= $f['tittle']; ?></td>
+                                <td><?= $f['url']; ?></td>
                                 <td>
-                                    <a class="badge badge-danger" href="<?= base_url('pages/deletesubfolder/' . $sf['id']) ?>">Hapus</a>
-                                    <a class="badge badge-warning" href="<?= base_url('pages/editsubfolder/' . $sf['id']) ?>">Edit</a>
+                                    <a class="badge badge-danger" href="<?= base_url('pages/deletemenu/' . $f['id']) ?>">Hapus</a>
+                                    <a class="badge badge-warning" href="<?= base_url('pages/editmenu/' . $f['id']) ?>">Edit</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -90,19 +74,17 @@
             </div>
             <div class="modal-body">
 
-                <form action="<?= base_url('pages/addSubFolder') ?>" method="POST">
+                <form action="addmenu" method="POST">
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Nama Folder" name="tittle">
+                        <input type="text" class="form-control" id="namaFolder" placeholder="Nama Folder" name="namaFolder">
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="url" name="url">
+                        <input type="text" class="form-control" id="url" placeholder="Url" name="url">
                     </div>
                     <div class="mb-3">
-                        <select class="form-select" name="folderId">
-                            <?php foreach ($folder as $f) : ?>
-                                <?php if (!$f['url']) : ?>
-                                    <option value="<?= $f['id'] ?>"><?= ($f['url']) ?: $f['tittle']  ?></option>
-                                <?php endif; ?>
+                        <select class="form-select" name="menuId">
+                            <?php foreach ($menu as $f) : ?>
+                                <option value="<?= $f['id'] ?>"><?= $f['tittle'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

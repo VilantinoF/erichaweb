@@ -1,10 +1,10 @@
-<?= $this->extend('static/default'); ?>
+<?= $this->extend('templates/default'); ?>
 
 <?= $this->section('content'); ?>
 <div id="wrapper">
 
     <!-- sidebar -->
-    <?= $this->include('static/sidebar'); ?>
+    <?= $this->include('templates/sidebar'); ?>
     <!-- endsidebar -->
 
     <div id="content-wrapper" class="d-flex flex-column">
@@ -12,7 +12,7 @@
         <!-- Main Content -->
         <div id="content">
 
-            <?= $this->include('static/topbar') ?>
+            <?= $this->include('templates/topbar') ?>
 
             <!-- Begin Page Content -->
             <div class="container-fluid">

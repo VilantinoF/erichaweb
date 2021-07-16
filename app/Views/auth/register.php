@@ -1,4 +1,4 @@
-<?= $this->extend('static/auth_default'); ?>
+<?= $this->extend('auth/templates/auth_default'); ?>
 
 <?= $this->section('content'); ?>
 
@@ -23,6 +23,13 @@
 								<input type="text" class="form-control form-control-user" id="uname" name="uname" placeholder="Username" value="<?= old('uname'); ?>">
 								<?= $validation->getError('uname'); ?>
 							</div>
+							<div class="form-group">
+								<select class="form-select form-control" name="role">
+									<option selected>--Jabatan--</option>
+									<option value="2">Mahasiswa</option>
+									<option value="3">Dosen</option>
+								</select>
+							</div>
 							<div class="form-group row">
 								<div class="col-sm-6 mb-3 mb-sm-0">
 									<input type="password" class="form-control form-control-user" id="password1" name="password1" placeholder="Password">
@@ -38,7 +45,7 @@
 						</form>
 						<hr>
 						<div class="text-center">
-							<p>Already have an account? <a class="small" href="/auth">Login!</a></p>
+							<a class="small" href="<?= base_url('auth') ?>">Already have an account? Login!</a>
 						</div>
 					</div>
 				</div>

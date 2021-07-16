@@ -74,7 +74,7 @@ $routes->get('Sipil', 'Pages::index');
 $routes->get('Sipil/', 'Pages::index');
 
 $routes->get('/', 'Auth::index');
-// $routes->get('users', 'UserController::getAll');
+// $routes->get('subSubFolder', 'Pages::manageSubSubFolder');
 // $routes->get('/', 'Home::index');
 
 /*

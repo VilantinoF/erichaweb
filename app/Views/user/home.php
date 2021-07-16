@@ -1,11 +1,11 @@
-<?= $this->extend('static/default'); ?>
+<?= $this->extend('templates/default'); ?>
 
 <?= $this->section('content'); ?>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
     <!-- sidebar -->
-    <?= $this->include('static/sidebar'); ?>
+    <?= $this->include('templates/sidebar'); ?>
     <!-- endsidebar -->
 
     <!-- Content Wrapper -->
@@ -15,7 +15,7 @@
         <div id="content">
 
             <!-- Topbar -->
-            <?= $this->include('static/topbar') ?>
+            <?= $this->include('templates/topbar') ?>
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->

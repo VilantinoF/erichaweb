@@ -78,6 +78,7 @@ class Auth extends BaseController
 		if (!$this->validate([
 			'name' => 'required',
 			'uname' => 'required|trim|is_unique[user.uname]',
+			'role' => 'required',
 			'password1' => [
 				'rules' => 'required|matches[password2]',
 				'errors' => [
@@ -94,12 +95,13 @@ class Auth extends BaseController
 
 		$name = $this->request->getVar('name');
 		$uname  = trim(strtolower($this->request->getVar('uname')));
+		$role  = $this->request->getVar('role');
 		$password1  = password_hash($this->request->getVar('password1'), PASSWORD_DEFAULT);
 
 		$this->userModel->save([
 			'name' => $name,
 			'uname' => $uname,
-			'role' => 1,
+			'role' => $role,
 			'password' => $password1
 		]);
 
