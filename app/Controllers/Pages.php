@@ -115,10 +115,14 @@ class Pages extends BaseController
       return redirect()->to('/auth');
     }
 
+    $page_indexing = $this->request->getVar('page_subfolder') ? $this->request->getVar('page_subfolder') : 1;
+
     $data = [
       'tittle' => 'Manage Sub Folder',
       'folder' =>  $this->folderModel->findAll(),
-      'subFolder' => $this->subFolderModel->findAll(),
+      'subFolder' => $this->subFolderModel->paginate('7', 'subfolder'),
+      'pager' => $this->subFolderModel->pager,
+      'page_indexing' => $page_indexing,
     ];
 
     return view('user/managesubfolder', $data);
@@ -193,13 +197,14 @@ class Pages extends BaseController
     if (session('uname') == null) {
       return redirect()->to('/auth');
     }
-    // $page = $this->subSubFolderModel->get()->getNumRows();
+    $page_indexing = $this->request->getVar('page_subsubfolder') ? $this->request->getVar('page_subsubfolder') : 1;
     $data = [
       'tittle' => 'Manage Sub Sub Folder',
-      'subSubFolder' => $this->subSubFolderModel->findAll(),
-      // 'pager' => $this->subSubFolderModel->pager,
+      'subSubFolder' => $this->subSubFolderModel->paginate(7, 'subsubfolder'),
+      'pager' => $this->subSubFolderModel->pager,
       'subFolder' => $this->subFolderModel->findAll(),
       'folder' => $this->folderModel->findAll(),
+      'page_indexing' => $page_indexing,
     ];
     return view('user/managesubsubfolder', $data);
   }

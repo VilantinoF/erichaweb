@@ -26,7 +26,7 @@
                     <?= session()->getFlashdata('pesan'); ?>
                 <?php endif; ?>
 
-
+                <?= $pager->links('subfolder', 'erichaweb') ?>
                 <!-- table -->
                 <table class="table table-hover">
                     <thead>
@@ -40,7 +40,7 @@
                     </thead>
                     <tbody>
 
-                        <?php $i = 1 ?>
+                        <?php $i = 1 + (7 * ($page_indexing - 1)) ?>
                         <?php foreach ($subFolder as $sf) : ?>
                             <?php
 
@@ -70,9 +70,8 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-
+                <?= $pager->links('subfolder', 'erichaweb') ?>
             </div>
-
         </div>
         <!-- End of Main Content -->
 
