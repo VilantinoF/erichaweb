@@ -23,6 +23,9 @@ class Elektro extends BaseController
 
     public function index()
     {
+        if (session('uname') == null) {
+            return redirect()->to('/auth');
+        }
         $session = session();
         if ($session->get('role') == 3) {
             $parsing = explode('/', uri_string());
@@ -100,6 +103,10 @@ class Elektro extends BaseController
 
     public function addFile()
     {
+
+        if (session('uname') == null) {
+            return redirect()->to('/auth');
+        }
         // dd($this->request->getFile('file'));
         $file = $this->request->getFile('file');
         if (!$file->isValid()) {
@@ -141,7 +148,9 @@ class Elektro extends BaseController
 
     public function deleteFile($id)
     {
-
+        if (session('uname') == null) {
+            return redirect()->to('/auth');
+        }
         $file = $this->filesModel->find($id);
         unlink('files/elektro/' . $file['store_file']);
 
@@ -170,6 +179,9 @@ class Elektro extends BaseController
 
     public function downloadFile($id)
     {
+        if (session('uname') == null) {
+            return redirect()->to('/auth');
+        }
         $file = $this->filesModel->find($id);
         // dd($file);
         return $this->response->download('files/elektro/' . $file['store_file'], null)->setFileName($file['file']);

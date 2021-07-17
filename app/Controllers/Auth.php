@@ -29,6 +29,9 @@ class Auth extends BaseController
 
 	public function login()
 	{
+		if (session('uname') != null) {
+			return redirect()->to('/pages');
+		}
 		if (!$this->validate([
 			'uname' => 'required|trim',
 			'password' => 'required'
@@ -62,6 +65,9 @@ class Auth extends BaseController
 
 	public function register()
 	{
+		if (session('uname') != null) {
+			return redirect()->to('/pages');
+		}
 
 		$data = [
 			'tittle' => 'Register Account',
@@ -73,6 +79,9 @@ class Auth extends BaseController
 
 	public function saveAccount()
 	{
+		if (session('uname') != null) {
+			return redirect()->to('/pages');
+		}
 
 		// form validation
 		if (!$this->validate([

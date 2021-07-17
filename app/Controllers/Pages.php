@@ -31,6 +31,9 @@ class Pages extends BaseController
 
   public function manageMenu()
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $this->subFolder = $this->db->table('sub_menu');
 
     $data = [
@@ -44,6 +47,9 @@ class Pages extends BaseController
 
   public function addMenu()
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $tittle = $this->request->getVar('namaFolder');
     $url = $this->request->getVar('url');
     $menu_id = $this->request->getVar('menuId');
@@ -62,6 +68,9 @@ class Pages extends BaseController
 
   public function deleteMenu($id)
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $this->folderModel->delete($id);
     session()->setFlashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Folder berhasil dihapus</strong>
@@ -72,6 +81,9 @@ class Pages extends BaseController
 
   public function editMenu($id = null)
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $data = [
       'tittle' => 'Edit Menu',
       'menu' =>  $this->menuModel->findAll(),
@@ -99,6 +111,9 @@ class Pages extends BaseController
 
   public function manageSubFolder()
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
 
     $data = [
       'tittle' => 'Manage Sub Folder',
@@ -111,6 +126,9 @@ class Pages extends BaseController
 
   public function addSubFolder()
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
 
     // dd($this->request->getVar('folderId'));
     $this->subFolderModel->save([
@@ -128,6 +146,9 @@ class Pages extends BaseController
 
   public function deleteSubFolder($id)
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $this->subFolderModel->delete($id);
     session()->setFlashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Sub Folder berhasil dihapus</strong>
@@ -139,6 +160,9 @@ class Pages extends BaseController
 
   public function editSubFolder($id = null)
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $data = [
       'tittle' => 'Edit Sub Folder',
       'folder' =>  $this->folderModel->findAll(),
@@ -166,6 +190,9 @@ class Pages extends BaseController
 
   public function manageSubSubFolder()
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     // $page = $this->subSubFolderModel->get()->getNumRows();
     $data = [
       'tittle' => 'Manage Sub Sub Folder',
@@ -179,6 +206,9 @@ class Pages extends BaseController
 
   public function addSubSubFolder()
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
 
     if (!$this->request->getVar('namaSubSubFolder') === 'Jurusan Administrasi Bisnis') {
       $parsing = explode(' ', $this->request->getVar('namaSubSubFolder'));
@@ -200,6 +230,9 @@ class Pages extends BaseController
 
   public function deleteSubSubFolder($id)
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $this->subSubFolderModel->delete($id);
     session()->setFlashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Sub Sub Folder berhasil dihapus</strong>
@@ -210,6 +243,9 @@ class Pages extends BaseController
 
   public function editSubSubFolder($id = null)
   {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
     $data = [
       'tittle' => 'Edit Sub Sub Folder',
       'subFolder' =>  $this->subFolderModel->findAll(),
