@@ -38,40 +38,14 @@ $routes->setAutoRoute(true);
 $routes->set404Override(function () {
 	return view('errors/404error.php');
 });
-// routes adbis
-$routes->get('adbis/(:segment)/(:segment)/(:segment)', 'Adbis::index');
-$routes->get('adbis/(:segment)/(:segment)', 'Adbis::index');
-$routes->get('adbis/(:segment)', 'Adbis::index');
-$routes->get('Adbis', 'Pages::index');
-$routes->get('Adbis/', 'Pages::index');
 
-// routes akuntansi
-$routes->get('akuntansi/(:segment)/(:segment)/(:segment)', 'Akuntansi::index');
-$routes->get('akuntansi/(:segment)/(:segment)', 'Akuntansi::index');
-$routes->get('akuntansi/(:segment)', 'Akuntansi::index');
-$routes->get('Akuntansi', 'Pages::index');
-$routes->get('Akuntansi/', 'Pages::index');
-
-// route elektro
-$routes->get('elektro/(:segment)/(:segment)/(:segment)', 'Elektro::index');
-$routes->get('elektro/(:segment)/(:segment)', 'Elektro::index');
-$routes->get('elektro/(:segment)', 'Elektro::index');
-$routes->get('Elektro', 'Pages::index');
-$routes->get('Elektro/', 'Pages::index');
-
-// route mesin
-$routes->get('mesin/(:segment)/(:segment)/(:segment)', 'Mesin::index');
-$routes->get('mesin/(:segment)/(:segment)', 'Mesin::index');
-$routes->get('mesin/(:segment)', 'Mesin::index');
-$routes->get('Mesin', 'Pages::index');
-$routes->get('Mesin/', 'Pages::index');
-
-// route sipil
-$routes->get('sipil/(:segment)/(:segment)/(:segment)', 'Sipil::index');
-$routes->get('sipil/(:segment)/(:segment)', 'Sipil::index');
-$routes->get('sipil/(:segment)', 'Sipil::index');
-$routes->get('Sipil', 'Pages::index');
-$routes->get('Sipil/', 'Pages::index');
+// routes file
+$routes->get('file/(:segment)/(:segment)/(:segment)/(:segment)', 'File::index');
+$routes->get('file/(:segment)/(:segment)/(:segment)', 'File::index');
+$routes->get('file/(:segment)/(:segment)', 'File::index');
+$routes->get('file/(:segment)', 'File::index');
+$routes->get('File', 'Pages::index');
+$routes->get('File/', 'Pages::index');
 
 $routes->get('/', 'Auth::index');
 // $routes->get('subSubFolder', 'Pages::manageSubSubFolder');

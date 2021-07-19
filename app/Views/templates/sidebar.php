@@ -24,7 +24,7 @@ $menu = $db->query($queryMenu)->getResultArray();
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 	<!-- Sidebar - Brand -->
-	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('pages') ?>">
 		<div class="sidebar-brand-icon">
 			<i class="fas fa-user-alt"></i>
 		</div>
@@ -55,7 +55,7 @@ $menu = $db->query($queryMenu)->getResultArray();
 		<?php foreach ($folder as $f) : ?>
 
 			<li class="nav-item">
-				<a class="nav-link collapsed" href="<?= $f['url'] ?>" <?= ($f['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace(' ', '', $f['tittle']) ?>" aria-expanded="true" aria-controls="<?= str_replace(' ', '', $f['tittle']) ?>">
+				<a class="nav-link collapsed" href=" <?= base_url(($f['url'] != null) ? $f['url'] . '/' . $f['id'] : ''); ?>" <?= ($f['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace(' ', '', $f['tittle']) ?>" aria-expanded="true" aria-controls="<?= str_replace(' ', '', $f['tittle']) ?>">
 					<i class="<?= $f['icon'] ?>"></i>
 					<span><?= $f['tittle'] ?></span>
 				</a>
@@ -73,7 +73,7 @@ $menu = $db->query($queryMenu)->getResultArray();
 					<div class="bg-gray-300 py-2 collapse-inner rounded">
 						<?php foreach ($subFolder as $sf) : ?>
 
-							<a class="collapse-item text-wrap" href="<?= base_url(($sf['url'] != null) ? $sf['url'] . $f['id'] . '/' . $sf['id'] : ''); ?>" <?= ($sf['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace('/', '', str_replace(' ', '', $sf['tittle'])) ?>" aria-expanded="true" aria-controls="<?= str_replace('/', '', str_replace(' ', '', $sf['tittle'])) ?>"><?= $sf['tittle'] ?>
+							<a class="collapse-item text-wrap" href="<?= base_url(($sf['url'] != null) ? $sf['url'] . '/' . $f['id'] . '/' . $sf['id'] : ''); ?>" <?= ($sf['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace('/', '', str_replace(' ', '', $sf['tittle'])) ?>" aria-expanded="true" aria-controls="<?= str_replace('/', '', str_replace(' ', '', $sf['tittle'])) ?>"><?= $sf['tittle'] ?>
 							</a>
 
 
@@ -90,7 +90,27 @@ $menu = $db->query($queryMenu)->getResultArray();
 							<div id="<?= str_replace('/', '', str_replace(' ', '', $sf['tittle'])) ?>" class="collapse bg-white rounded">
 								<?php foreach ($subSubFolder as $ssf) : ?>
 									<div class="py-0 my-0 collapse-inner rounded">
-										<a class="collapse-item text-wrap" href="<?= base_url(($ssf['url'] != null) ? $ssf['url'] . '/' . $f['id'] . '/' . $sf['id'] . '/' . $ssf['id'] : ''); ?>"><?= $ssf['tittle'] ?></a>
+										<a class="collapse-item text-wrap" <?= ($sf['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>" aria-expanded="true" aria-controls="<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>" href="<?= base_url(($ssf['url'] != null) ? $ssf['url'] . '/' . $f['id'] . '/' . $sf['id'] . '/' . $ssf['id'] : ''); ?>"><?= $ssf['tittle'] ?></a>
+
+
+										<?php
+
+										$subSubFolderId = $ssf['id'];
+										$querySubSubSubFolder = "SELECT * FROM `sub_sub_sub_folder` WHERE `sub_sub_folder_id` = $subSubFolderId";
+
+										$subSubSubFolder = $db->query($querySubSubSubFolder)->getResultArray();
+
+										?>
+
+										<div id="<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>" class="collapse bg-white rounded">
+											<?php foreach ($subSubSubFolder as $sssf) : ?>
+												<div class="py-0 my-0 collapse-inner rounded">
+													<a class="collapse-item text-wrap" href="<?= base_url(($sssf['url'] != null) ? $sssf['url'] . '/' . $f['id'] . '/' . $sf['id'] . '/' . $ssf['id'] . '/' . $sssf['id'] : ''); ?>"><?= $sssf['tittle'] ?></a>
+												</div>
+											<?php endforeach; ?>
+										</div>
+
+
 									</div>
 								<?php endforeach; ?>
 							</div>

@@ -1,15 +1,15 @@
-<?= $this->extend('static/default'); ?>
+<?= $this->extend('templates/default'); ?>
 
 <?= $this->section('content'); ?>
 <div id="wrapper">
 
-    <?= $this->include('static/sidebar'); ?>
+    <?= $this->include('templates/sidebar'); ?>
 
     <div id="content-wrapper" class="d-flex flex-column">
 
         <div id="content">
 
-            <?= $this->include('static/topbar') ?>
+            <?= $this->include('templates/topbar') ?>
 
             <div class="container-fluid">
 

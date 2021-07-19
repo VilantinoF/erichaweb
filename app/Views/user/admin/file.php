@@ -34,9 +34,6 @@
 
                 <!-- table -->
                 <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Prodi</h6>
-                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -54,7 +51,7 @@
                                         <tr>
                                             <td><?= $i++ ?></td>
                                             <td>
-                                                <a href="<?= base_url('Adbis/downloadfile') . '/' . $f['id'] ?>"><?= $f['file'] ?></a>
+                                                <a href="/files/<?= $f['store_file'] ?>"><?= $f['file'] ?></a>
                                             </td>
                                             <td><?= $f['uploaded_at'] ?></td>
                                             <td>

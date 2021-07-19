@@ -9,7 +9,7 @@ use App\Models\SubSubFolderModel;
 use App\Models\SubSubSubFolderModel;
 use CodeIgniter\HTTP\Files\UploadedFile;
 
-class Adbis extends BaseController
+class File extends BaseController
 {
 
     protected $filesModel, $subSubFolderModel, $subFolderModel, $folderModel, $subSubSubFolderModel;
@@ -78,7 +78,7 @@ class Adbis extends BaseController
                 'tittle' => 'Administrasi Bisnis',
                 'files' => $result,
             ];
-            return view('user/dosen/adbis', $data);
+            return view('user/dosen/file', $data);
         }
 
         $parsing = explode('/', uri_string());
@@ -127,7 +127,7 @@ class Adbis extends BaseController
             'tittle' => 'Administrasi Bisnis',
             'files' => $result,
         ];
-        return view('user/admin/adbis', $data);
+        return view('user/admin/file', $data);
     }
 
 
@@ -144,7 +144,7 @@ class Adbis extends BaseController
             // dd($this->request->getVar('subFolderId'));
             // dd($this->request->getVar('subSubSubFolderId'));
             $newFileName = $file->getRandomName();
-            $file->move('files/adbis', $newFileName);
+            $file->move('files/', $newFileName);
             $data = [
                 'file' => $file->getClientName(),
                 'store_file' => $newFileName,
@@ -160,13 +160,13 @@ class Adbis extends BaseController
     </div>');
 
             if ($this->request->getVar('subSubSubFolderId') != null) {
-                return redirect()->to('/adbis/' . $this->request->getVar('folderId') . '/' . $this->request->getVar('subFolderId') . '/' . $this->request->getVar('subSubFolderId') . '/' . $this->request->getVar('subSubSubFolderId'));
+                return redirect()->to('/file/' . $this->request->getVar('folderId') . '/' . $this->request->getVar('subFolderId') . '/' . $this->request->getVar('subSubFolderId') . '/' . $this->request->getVar('subSubSubFolderId'));
             } elseif ($this->request->getVar('subSubFolderId') != null) {
-                return redirect()->to('/adbis/' . $this->request->getVar('folderId') . '/' . $this->request->getVar('subFolderId') . '/' . $this->request->getVar('subSubFolderId'));
+                return redirect()->to('/file/' . $this->request->getVar('folderId') . '/' . $this->request->getVar('subFolderId') . '/' . $this->request->getVar('subSubFolderId'));
             } elseif ($this->request->getVar('subFolderId') != null) {
-                return redirect()->to('/adbis/' . $this->request->getVar('folderId') . '/' . $this->request->getVar('subFolderId'));
+                return redirect()->to('/file/' . $this->request->getVar('folderId') . '/' . $this->request->getVar('subFolderId'));
             } else {
-                return redirect()->to('/adbis/' . $this->request->getVar('folderId'));
+                return redirect()->to('/file/' . $this->request->getVar('folderId'));
             }
         }
     }
@@ -178,7 +178,7 @@ class Adbis extends BaseController
         }
 
         $file = $this->filesModel->find($id);
-        unlink('files/adbis/' . $file['store_file']);
+        unlink('files/' . $file['store_file']);
 
         $this->filesModel->delete($id);
 
@@ -193,29 +193,19 @@ class Adbis extends BaseController
             $subFolderId = $parsing[5];
             $subSubFolderId = $parsing[6];
             $subSubSubFolderId = $parsing[7];
-            return redirect()->to('adbis/' . $folderId . '/' . $subFolderId . '/' . $subSubFolderId . '/' . $subSubSubFolderId);
+            return redirect()->to('file/' . $folderId . '/' . $subFolderId . '/' . $subSubFolderId . '/' . $subSubSubFolderId);
         } elseif (!empty($parsing[4]) and !empty($parsing[5]) and !empty($parsing[6])) {
             $folderId = $parsing[4];
             $subFolderId = $parsing[5];
             $subSubFolderId = $parsing[6];
-            return redirect()->to('adbis/' . $folderId . '/' . $subFolderId . '/' . $subSubFolderId);
+            return redirect()->to('file/' . $folderId . '/' . $subFolderId . '/' . $subSubFolderId);
         } elseif (!empty($parsing[4]) and !empty($parsing[5])) {
             $folderId = $parsing[4];
             $subFolderId = $parsing[5];
-            return redirect()->to('adbis/' . $folderId . '/' . $subFolderId);
+            return redirect()->to('file/' . $folderId . '/' . $subFolderId);
         } else {
             $folderId = $parsing[4];
-            return redirect()->to('adbis/' . $folderId);
+            return redirect()->to('file/' . $folderId);
         }
-    }
-
-    public function downloadFile($id)
-    {
-        if (session('uname') == null) {
-            return redirect()->to('/auth');
-        }
-        $file = $this->filesModel->find($id);
-        // dd($file);
-        return $this->response->download('files/adbis/' . $file['store_file'], null)->setFileName($file['file']);
     }
 }

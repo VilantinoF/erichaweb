@@ -19,66 +19,62 @@
 
 
                 <button type="button" class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#tambahFolder">
-                    Tambah Folder
+                    Tambah Sub Sub Sub Folder
                 </button>
 
                 <?php if (session()->getFlashdata('pesan')) : ?>
                     <?= session()->getFlashdata('pesan'); ?>
                 <?php endif; ?>
 
-                <?= $pager->links('subsubfolder', 'erichaweb') ?>
-
+                <?= $pager->links('subsubsubfolder', 'erichaweb') ?>
                 <!-- table -->
-                <table class="table table-hover">
+                <table class="table table-hover table-responsive{-sm|-md|-lg|-xl|-xxl}">
                     <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Nama Sub Sub Folder</th>
+                            <th scope="col">Nama Sub Sub Sub Folder</th>
                             <th scope="col">URL</th>
                             <th scope="col">Parent Folder</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-
                         <?php $i = 1 + (7 * ($page_indexing - 1)) ?>
-                        <?php foreach ($subSubFolder as $ssf) : ?>
+                        <?php foreach ($subSubSubFolder as $sssf) : ?>
+
                             <?php
 
                             $db = \Config\Database::connect();
 
-                            $subFolderId = $ssf['sub_folder_id'];
+                            $subSubSubFolderId = $sssf['sub_sub_folder_id'];
 
 
-                            $query = "SELECT `sub_folder`.`tittle`, `folder`.`tittle` as `foldert`
-				                        FROM `sub_sub_folder` JOIN `sub_folder`
-				                        ON `sub_folder`.`id` = $subFolderId
-                                        JOIN `folder` ON `sub_folder`.`folder_id` = `folder`.`id`
-			                            ORDER BY `sub_folder`.`id` ASC
+                            $query = "SELECT `folder`.`tittle` as f, `folder`.`url`, `sub_folder`.`tittle` as `sf`, `sub_sub_folder`.`tittle` as `ssf`
+                            FROM `sub_sub_sub_folder` JOIN `sub_sub_folder`
+                            ON `sub_sub_folder`.`id` = $subSubSubFolderId
+                            JOIN `sub_folder` ON `sub_folder`.`id` = `sub_sub_folder`.`sub_folder_id`
+                            JOIN `folder` ON `folder`.`id` = `sub_folder`.`folder_id`
+                            ORDER BY `sub_folder`.`id` ASC
 			                            ";
 
                             $result = $db->query($query)->getRowArray();
-                            // dd($result);
+
                             ?>
-
-
 
                             <tr>
                                 <th scope="row"><?= $i++ ?></th>
-                                <td><?= $ssf['tittle']; ?></td>
-                                <td><?= $ssf['url']; ?></td>
-                                <td><?= $result['foldert'] . ' / ' . $result['tittle']; ?></td>
+                                <td><?= $sssf['tittle']; ?></td>
+                                <td><?= $sssf['url']; ?></td>
+                                <td class="text-wrap"><?= $result['f'] . ' / ' . $result['sf'] . ' / ' . $result['ssf'] ?></td>
                                 <td>
-                                    <a class="badge badge-danger" href="<?= base_url('pages/deletesubsubfolder/' . $ssf['id']) ?>">Hapus</a>
-                                    <a class="badge badge-warning" href="<?= base_url('pages/editsubsubfolder/' . $ssf['id']) ?>">Edit</a>
+                                    <a class="badge badge-danger" href="<?= base_url('pages/deletesubsubsubfolder/' . $sssf['id']) ?>">Hapus</a>
+                                    <a class="badge badge-warning" href="<?= base_url('pages/editsubsubsubfolder/' . $sssf['id']) ?>">Edit</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
-                <?= $pager->links('subsubfolder', 'erichaweb') ?>
             </div>
 
         </div>
@@ -93,40 +89,37 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Tambah Sub Sub Folder</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Tambah Sub Sub Sub Folder</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
 
-                <form action="" method="POST">
+                <form action="<?= base_url('pages/addsubsubsubfolder') ?>" method="POST">
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Nama Sub Sub Folder" name="namaSubSubFolder">
+                        <input type="text" class="form-control" placeholder="Nama Sub Sub Sub Folder" name="tittle">
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="URL" name="url">
+                        <input type="text" class="form-control" placeholder="Url" name="url">
                     </div>
                     <div class="mb-3">
-                        <select class="form-select" name="subFolderId">
-                            <?php foreach ($subFolder as $sf) : ?>
+                        <select class="form-select" name="subSubFolderId">
 
+                            <?php foreach ($subSubFolder as $ssf) : ?>
                                 <?php
-
-                                $folderId = $sf['folder_id'];
-
-
-                                $query = "SELECT `folder`.`tittle`, `folder`.`url`
-				                        FROM `sub_folder` JOIN `folder`
-				                        ON `folder`.`id` = $folderId
-			                            ORDER BY `sub_folder`.`id` ASC
+                                $subFolderId = $ssf['sub_folder_id'];
+                                $query = "SELECT `folder`.`tittle` as f, `folder`.`url`, `sub_folder`.`tittle` as `sf`
+                                FROM `sub_sub_folder` JOIN `sub_folder`
+                                ON `sub_folder`.`id` = $subFolderId
+                                JOIN `folder` ON `folder`.`id` = `sub_folder`.`folder_id`
+                                ORDER BY `sub_folder`.`id` ASC
 			                            ";
 
                                 $result = $db->query($query)->getRowArray();
+                                // d($result);
 
                                 ?>
 
-                                <?php if (!$result['url']) : ?>
-                                    <option value="<?= $sf['id'] ?>"><?= $result['tittle'] . ' / ' . $sf['tittle'] ?></option>
-                                <?php endif; ?>
+                                <option value="<?= $ssf['id'] ?>"><?= $result['f'] . ' / ' . $result['sf'] . ' / ' . $ssf['tittle'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>

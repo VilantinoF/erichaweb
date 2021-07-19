@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class FilesModel extends Model
 {
     protected $table = 'files';
-    protected $allowedFields = ['file', 'store_file', 'uploaded_at', 'sub_sub_folder_id', 'sub_folder_id', 'folder_id', 'menu_id'];
+    protected $allowedFields = ['file', 'store_file', 'uploaded_at', 'sub_sub_sub_folder_id', 'sub_sub_folder_id', 'sub_folder_id', 'folder_id', 'menu_id'];
 
 
     public function getFile()
@@ -29,7 +29,6 @@ class FilesModel extends Model
     {
         $data = [
             'file' => $this->request->getFile('file'),
-            'uploaded_at'    => 'd.vader@theempire.com'
         ];
 
         $this->insert($data);

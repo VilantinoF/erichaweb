@@ -5,7 +5,7 @@ namespace App\Controllers;
 class Pages extends BaseController
 {
 
-  protected $db, $pager, $folderModel, $menuModel, $validation, $subFolderModel, $subSubFolderModel;
+  protected $db, $pager, $folderModel, $menuModel, $validation, $subFolderModel, $subSubFolderModel, $subSubSubFolderModel;
 
   public function __construct()
   {
@@ -14,6 +14,8 @@ class Pages extends BaseController
     $this->folderModel = model('App\Models\FolderModel');
     $this->subFolderModel = model('App\Models\SubFolderModel');
     $this->subSubFolderModel = model('App\Models\SubSubFolderModel');
+    $this->subSubSubFolderModel = model('App\Models\SubSubSubFolderModel');
+    $this->filesModel = model('App\Models\FilesModel');
     $this->validation =  \Config\Services::validation();
     $this->pager = \Config\Services::pager();
   }
@@ -23,6 +25,21 @@ class Pages extends BaseController
     if (session('uname') == null) {
       return redirect()->to('/auth');
     }
+
+
+    if ($this->request->getPost()) {
+      $keyword = $this->request->getVar('keyword');
+      $hasilCari = $this->filesModel->like('file', $keyword)->findAll();
+      // dd($hasilCari);
+
+      $data = [
+        'tittle' => 'Hasil ' . $this->request->getVar('keyword'),
+        'hasilCari' => $hasilCari,
+        'keyword' => $keyword,
+      ];
+      return view('user/cari', $data);
+    }
+
     $data = [
       'tittle' => 'Admin',
     ];
@@ -197,40 +214,31 @@ class Pages extends BaseController
     if (session('uname') == null) {
       return redirect()->to('/auth');
     }
-    $page_indexing = $this->request->getVar('page_subsubfolder') ? $this->request->getVar('page_subsubfolder') : 1;
-    $data = [
-      'tittle' => 'Manage Sub Sub Folder',
-      'subSubFolder' => $this->subSubFolderModel->paginate(7, 'subsubfolder'),
-      'pager' => $this->subSubFolderModel->pager,
-      'subFolder' => $this->subFolderModel->findAll(),
-      'folder' => $this->folderModel->findAll(),
-      'page_indexing' => $page_indexing,
-    ];
-    return view('user/managesubsubfolder', $data);
-  }
 
-  public function addSubSubFolder()
-  {
-    if (session('uname') == null) {
-      return redirect()->to('/auth');
+    if ($this->request->getPost()) {
+      $this->subSubFolderModel->save([
+        'tittle' => $this->request->getVar('namaSubSubFolder'),
+        'url' => $this->request->getVar('url'),
+        'sub_folder_id' => $this->request->getVar('subFolderId'),
+      ]);
+
+      session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Folder berhasil ditambahkan</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>');
+      return redirect()->to(previous_url());
+    } else {
+      $page_indexing = $this->request->getVar('page_subsubfolder') ? $this->request->getVar('page_subsubfolder') : 1;
+      $data = [
+        'tittle' => 'Manage Sub Sub Folder',
+        'subSubFolder' => $this->subSubFolderModel->paginate(7, 'subsubfolder'),
+        'pager' => $this->subSubFolderModel->pager,
+        'subFolder' => $this->subFolderModel->findAll(),
+        'folder' => $this->folderModel->findAll(),
+        'page_indexing' => $page_indexing,
+      ];
+      return view('user/managesubsubfolder', $data);
     }
-
-    if (!$this->request->getVar('namaSubSubFolder') === 'Jurusan Administrasi Bisnis') {
-      $parsing = explode(' ', $this->request->getVar('namaSubSubFolder'));
-      $url = $parsing['1'];
-    }
-    $url = 'adbis';
-    $this->subSubFolderModel->save([
-      'tittle' => $this->request->getVar('namaSubSubFolder'),
-      'url' => $url,
-      'sub_folder_id' => $this->request->getVar('subFolderId'),
-    ]);
-
-    session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Folder berhasil ditambahkan</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>');
-    return redirect()->to('pages/managesubsubfolder');
   }
 
   public function deleteSubSubFolder($id)
@@ -273,5 +281,80 @@ class Pages extends BaseController
     }
 
     return view('user/editsubsubfolder', $data);
+  }
+
+  public function manageSubSubSubFolder()
+  {
+    $page_indexing = $this->request->getVar('page_subsubsubfolder') ? $this->request->getVar('page_subsubsubfolder') : 1;
+    $data = [
+      'tittle' => 'Manage Sub Sub Sub Folder',
+      'subSubSubFolder' => $this->subSubSubFolderModel->paginate(7, 'subsubsubfolder'),
+      'pager' => $this->subSubSubFolderModel->pager,
+      'subSubFolder' => $this->subSubFolderModel->findAll(),
+      'page_indexing' => $page_indexing,
+    ];
+
+    return view('user/managesubsubsubfolder', $data);
+  }
+
+  public function addSubSubSubFolder()
+  {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
+
+    $this->subSubSubFolderModel->save([
+      'tittle' => $this->request->getVar('tittle'),
+      'url' => $this->request->getVar('url') ? $this->request->getVar('url') : 'file',
+      'sub_sub_folder_id' => $this->request->getVar('subSubFolderId'),
+    ]);
+
+    session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Folder berhasil ditambahkan</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+    return redirect()->to('pages/managesubsubsubfolder');
+  }
+
+  public function deleteSubSubSubFolder($id)
+  {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
+    $this->subSubSubFolderModel->delete($id);
+    session()->setFlashdata('pesan', '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Folder berhasil dihapus</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+    return redirect()->to('pages/manageSubSubSubFolder');
+  }
+
+  public function editSubSubSubFolder($id = null)
+  {
+    if (session('uname') == null) {
+      return redirect()->to('/auth');
+    }
+    $data = [
+      'tittle' => 'Edit Sub Sub Folder',
+      'subSubFolder' =>  $this->subSubFolderModel->findAll(),
+      'subSubSubFolderById' => $this->subSubSubFolderModel->getWhere(['id' => $id])->getRowArray(),
+    ];
+
+    if ($this->request->getPost()) {
+      $data = [
+        'tittle' => $this->request->getVar('tittle'),
+        'url' => $this->request->getVar('url'),
+        'sub_sub_folder_id' =>  $this->request->getVar('subSubFolderId'),
+      ];
+      $subSubSubFolderId = $this->request->getVar('id');
+      $this->subSubSubFolderModel->update($subSubSubFolderId, $data);
+      session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Sub Sub Sub Folder berhasil di edit</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+      return redirect()->to('pages/manageSubSubSubFolder');
+    }
+
+    return view('user/editsubsubsubfolder', $data);
   }
 }
