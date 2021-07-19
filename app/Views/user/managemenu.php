@@ -74,7 +74,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="addmenu" method="POST">
+                <form action="" method="POST">
                     <div class="mb-3">
                         <input type="text" class="form-control" id="namaFolder" placeholder="Nama Folder" name="namaFolder">
                     </div>

@@ -94,7 +94,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="<?= base_url('pages/addsubsubsubfolder') ?>" method="POST">
+                <form action="" method="POST">
                     <div class="mb-3">
                         <input type="text" class="form-control" placeholder="Nama Sub Sub Sub Folder" name="tittle">
                     </div>
