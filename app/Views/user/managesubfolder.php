@@ -28,7 +28,7 @@
 
                 <?= $pager->links('subfolder', 'erichaweb') ?>
                 <!-- table -->
-                <table class="table table-hover">
+                <table class="table table-hover table-responsive{-sm|-md|-lg|-xl|-xxl}">
                     <thead>
                         <tr>
                             <th scope="col">No</th>

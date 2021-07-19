@@ -5,11 +5,10 @@ namespace App\Controllers;
 class Pages extends BaseController
 {
 
-  protected $db, $pager, $folderModel, $menuModel, $validation, $subFolderModel, $subSubFolderModel, $subSubSubFolderModel;
+  protected $pager, $folderModel, $menuModel, $validation, $subFolderModel, $subSubFolderModel, $subSubSubFolderModel;
 
   public function __construct()
   {
-    $this->db = \Config\Database::connect();
     $this->menuModel = model('App\Models\MenuModel');
     $this->folderModel = model('App\Models\FolderModel');
     $this->subFolderModel = model('App\Models\SubFolderModel');
@@ -25,7 +24,6 @@ class Pages extends BaseController
     if (session('uname') == null) {
       return redirect()->to('/auth');
     }
-
 
     if ($this->request->getPost()) {
       $keyword = $this->request->getVar('keyword');
@@ -51,8 +49,22 @@ class Pages extends BaseController
     if (session('uname') == null) {
       return redirect()->to('/auth');
     }
-    $this->subFolder = $this->db->table('sub_menu');
+    if ($this->request->getPost()) {
+      $tittle = $this->request->getVar('namaFolder');
+      $url = $this->request->getVar('url');
+      $menu_id = $this->request->getVar('menuId');
 
+      $this->folderModel->save([
+        'tittle' => $tittle,
+        'url' => $url,
+        'menu_id' => $menu_id,
+      ]);
+      session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Folder berhasil ditambahkan</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>');
+      return redirect()->to(previous_url());
+    }
     $data = [
       'tittle' => 'Manage Menu',
       'menu' =>  $this->menuModel->findAll(),
@@ -60,27 +72,6 @@ class Pages extends BaseController
     ];
 
     return view('user/managemenu', $data);
-  }
-
-  public function addMenu()
-  {
-    if (session('uname') == null) {
-      return redirect()->to('/auth');
-    }
-    $tittle = $this->request->getVar('namaFolder');
-    $url = $this->request->getVar('url');
-    $menu_id = $this->request->getVar('menuId');
-
-    $this->folderModel->save([
-      'tittle' => $tittle,
-      'url' => $url,
-      'menu_id' => $menu_id,
-    ]);
-    session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Folder berhasil ditambahkan</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>');
-    return redirect()->to('pages/managemenu');
   }
 
   public function deleteMenu($id)
@@ -93,7 +84,7 @@ class Pages extends BaseController
     <strong>Folder berhasil dihapus</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>');
-    return redirect()->to('pages/manageMenu');
+    return redirect()->to(previous_url());
   }
 
   public function editMenu($id = null)
@@ -132,6 +123,20 @@ class Pages extends BaseController
       return redirect()->to('/auth');
     }
 
+    if ($this->request->getPost()) {
+      $this->subFolderModel->save([
+        'tittle' => $this->request->getVar('tittle'),
+        'url' => $this->request->getVar('url'),
+        'folder_id' => $this->request->getVar('folderId'),
+      ]);
+
+      session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Folder berhasil ditambahkan</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>');
+      return redirect()->to(previous_url());
+    }
+
     $page_indexing = $this->request->getVar('page_subfolder') ? $this->request->getVar('page_subfolder') : 1;
 
     $data = [
@@ -145,26 +150,6 @@ class Pages extends BaseController
     return view('user/managesubfolder', $data);
   }
 
-  public function addSubFolder()
-  {
-    if (session('uname') == null) {
-      return redirect()->to('/auth');
-    }
-
-    // dd($this->request->getVar('folderId'));
-    $this->subFolderModel->save([
-      'tittle' => $this->request->getVar('tittle'),
-      'url' => $this->request->getVar('url'),
-      'folder_id' => $this->request->getVar('folderId'),
-    ]);
-
-    session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Folder berhasil ditambahkan</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>');
-    return redirect()->to('pages/managesubfolder');
-  }
-
   public function deleteSubFolder($id)
   {
     if (session('uname') == null) {
@@ -175,7 +160,7 @@ class Pages extends BaseController
     <strong>Sub Folder berhasil dihapus</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>');
-    return redirect()->to('pages/manageSubFolder');
+    return redirect()->to(previous_url());
   }
 
 
@@ -227,18 +212,17 @@ class Pages extends BaseController
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>');
       return redirect()->to(previous_url());
-    } else {
-      $page_indexing = $this->request->getVar('page_subsubfolder') ? $this->request->getVar('page_subsubfolder') : 1;
-      $data = [
-        'tittle' => 'Manage Sub Sub Folder',
-        'subSubFolder' => $this->subSubFolderModel->paginate(7, 'subsubfolder'),
-        'pager' => $this->subSubFolderModel->pager,
-        'subFolder' => $this->subFolderModel->findAll(),
-        'folder' => $this->folderModel->findAll(),
-        'page_indexing' => $page_indexing,
-      ];
-      return view('user/managesubsubfolder', $data);
     }
+    $page_indexing = $this->request->getVar('page_subsubfolder') ? $this->request->getVar('page_subsubfolder') : 1;
+    $data = [
+      'tittle' => 'Manage Sub Sub Folder',
+      'subSubFolder' => $this->subSubFolderModel->paginate(7, 'subsubfolder'),
+      'pager' => $this->subSubFolderModel->pager,
+      'subFolder' => $this->subFolderModel->findAll(),
+      'folder' => $this->folderModel->findAll(),
+      'page_indexing' => $page_indexing,
+    ];
+    return view('user/managesubsubfolder', $data);
   }
 
   public function deleteSubSubFolder($id)
@@ -251,7 +235,7 @@ class Pages extends BaseController
     <strong>Sub Sub Folder berhasil dihapus</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>');
-    return redirect()->to('pages/manageSubSubFolder');
+    return redirect()->to(previous_url());
   }
 
   public function editSubSubFolder($id = null)
@@ -285,6 +269,21 @@ class Pages extends BaseController
 
   public function manageSubSubSubFolder()
   {
+
+    if ($this->request->getPost()) {
+      $this->subSubSubFolderModel->save([
+        'tittle' => $this->request->getVar('tittle'),
+        'url' => $this->request->getVar('url') ? $this->request->getVar('url') : 'file',
+        'sub_sub_folder_id' => $this->request->getVar('subSubFolderId'),
+      ]);
+
+      session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Folder berhasil ditambahkan</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>');
+      return redirect()->to(previous_url());
+    }
+
     $page_indexing = $this->request->getVar('page_subsubsubfolder') ? $this->request->getVar('page_subsubsubfolder') : 1;
     $data = [
       'tittle' => 'Manage Sub Sub Sub Folder',
@@ -297,25 +296,6 @@ class Pages extends BaseController
     return view('user/managesubsubsubfolder', $data);
   }
 
-  public function addSubSubSubFolder()
-  {
-    if (session('uname') == null) {
-      return redirect()->to('/auth');
-    }
-
-    $this->subSubSubFolderModel->save([
-      'tittle' => $this->request->getVar('tittle'),
-      'url' => $this->request->getVar('url') ? $this->request->getVar('url') : 'file',
-      'sub_sub_folder_id' => $this->request->getVar('subSubFolderId'),
-    ]);
-
-    session()->setFlashdata('pesan', '<div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Folder berhasil ditambahkan</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>');
-    return redirect()->to('pages/managesubsubsubfolder');
-  }
-
   public function deleteSubSubSubFolder($id)
   {
     if (session('uname') == null) {
@@ -326,7 +306,7 @@ class Pages extends BaseController
     <strong>Folder berhasil dihapus</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>');
-    return redirect()->to('pages/manageSubSubSubFolder');
+    return redirect()->to(previous_url());
   }
 
   public function editSubSubSubFolder($id = null)

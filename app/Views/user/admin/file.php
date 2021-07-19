@@ -33,37 +33,42 @@
 
 
                 <!-- table -->
-                <div class="card shadow mb-4">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama file</th>
-                                        <th>Uploaded at</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php $i = 1;
-                                    foreach ($files as $f) : ?>
+                <?php if (empty($files)) : ?>
+                    <h5 class="h5 font-weight text-gray-800 d-flex justify-content-center">Tidak ada files</h5>
+                    <a href="<?= base_url('pages') ?>">&larr; Back to home</a>
+                <?php else : ?>
+                    <div class="card shadow mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
                                         <tr>
-                                            <td><?= $i++ ?></td>
-                                            <td>
-                                                <a href="/files/<?= $f['store_file'] ?>"><?= $f['file'] ?></a>
-                                            </td>
-                                            <td><?= $f['uploaded_at'] ?></td>
-                                            <td>
-                                                <a href="<?= base_url('Adbis/deleteFile' . '/' . $f['id']) ?>">Delete</a>
-                                            </td>
+                                            <th>No</th>
+                                            <th>Nama file</th>
+                                            <th>Uploaded at</th>
+                                            <th>Aksi</th>
                                         </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php $i = 1;
+                                        foreach ($files as $f) : ?>
+                                            <tr>
+                                                <td><?= $i++ ?></td>
+                                                <td>
+                                                    <a href="/files/<?= $f['store_file'] ?>"><?= $f['file'] ?></a>
+                                                </td>
+                                                <td><?= $f['uploaded_at'] ?></td>
+                                                <td>
+                                                    <a href="<?= base_url('File/deleteFile' . '/' . $f['id']) ?>">Delete</a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
 
                 <!-- content end here -->
 
@@ -85,7 +90,7 @@
             </div>
             <div class="modal-body">
 
-                <form action="<?= base_url('adbis/addFile') ?>" method="POST" enctype="multipart/form-data">
+                <form action="<?= base_url('File/addFile') ?>" method="POST" enctype="multipart/form-data">
                     <?php
                     $parsing = explode('/', uri_string());
                     // dd($parsing);
