@@ -43,19 +43,22 @@
                                     </thead>
                                     <tbody>
                                         <?php $i = 1;
-                                        foreach ($hasilCari as $hs) : ?>
+                                        foreach ($hasilCari as $hc) : ?>
                                             <?php
-
+                                            // $folderId = $hs['folder_id'];
+                                            // $subFolderId = $hs['sub_folder_id'];
+                                            // $subSubFolderId = $hs['sub_sub_folder_id'];
+                                            // $subSubSubFolderId = $hs['sub_sub_sub_folder_id'];
                                             $db = \Config\Database::connect();
-
-                                            // $subSubSubFolderId = $sssf['sub_sub_folder_id'];
+                                            // if (!empty($hc['sub_folder_id'])) {
                                             $query = "SELECT `folder`.`tittle` as f, `sub_folder`.`tittle` as `sf`, `sub_sub_folder`.`tittle` as `ssf`, `sub_sub_sub_folder`.`tittle` as `sssf`
                                                             FROM `files`
-                                                            JOIN `folder` ON `folder`.`id` = `folder_id`
-                                                            JOIN `sub_folder` ON `sub_folder`.`id` = `sub_folder_id`
-                                                            JOIN `sub_sub_folder` ON `sub_sub_folder`.`id` = `sub_sub_folder_id`
-                                                            JOIN `sub_sub_sub_folder` ON `sub_sub_sub_folder`.`id` = `sub_sub_sub_folder_id`
+                                                            LEFT JOIN `folder` ON `folder`.`id` = `folder_id`
+                                                            LEFT JOIN `sub_folder` ON `sub_folder`.`id` = `sub_folder_id`
+                                                            LEFT JOIN `sub_sub_folder` ON `sub_sub_folder`.`id` = `sub_sub_folder_id`
+                                                            LEFT JOIN `sub_sub_sub_folder` ON `sub_sub_sub_folder`.`id` = `sub_sub_sub_folder_id`
                                                             ";
+
 
                                             $result = $db->query($query)->getRowArray();
 
@@ -63,9 +66,17 @@
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td>
-                                                    <?= $hs['file'] ?>
+                                                    <?= $hc['file'] ?>
                                                 </td>
-                                                <td><?= $result['f'] . ' / ' . $result['sf'] . ' / ' . $result['ssf'] . ' / ' . $result['sssf'] ?></td>
+                                                <?php if (!empty($result['sssf'])) : ?>
+                                                    <td><?= $result['f'] . ' / ' . $result['sf'] . ' / ' . $result['ssf'] . ' / ' . $result['sssf'] ?></td>
+                                                <?php elseif (!empty($result['ssf'])) : ?>
+                                                    <td><?= $result['f'] . ' / ' . $result['sf'] . ' / ' . $result['ssf'] ?></td>
+                                                <?php elseif (!empty($result['sf'])) : ?>
+                                                    <td><?= $result['f'] . ' / ' . $result['sf'] ?></td>
+                                                <?php else : ?>
+                                                    <td><?= $result['f'] ?></td>
+                                                <?php endif; ?>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>

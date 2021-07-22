@@ -90,7 +90,7 @@ $menu = $db->query($queryMenu)->getResultArray();
 							<div id="<?= str_replace('/', '', str_replace(' ', '', $sf['tittle'])) ?>" class="collapse bg-white rounded">
 								<?php foreach ($subSubFolder as $ssf) : ?>
 									<div class="py-0 my-0 collapse-inner rounded">
-										<a class="collapse-item text-wrap" <?= ($sf['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>" aria-expanded="true" aria-controls="<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>" href="<?= base_url(($ssf['url'] != null) ? $ssf['url'] . '/' . $f['id'] . '/' . $sf['id'] . '/' . $ssf['id'] : ''); ?>"><?= $ssf['tittle'] ?></a>
+										<a class="collapse-item text-wrap" href="<?= base_url(($ssf['url'] != null) ? $ssf['url'] . '/' . $f['id'] . '/' . $sf['id'] . '/' . $ssf['id'] : ''); ?>" <?= ($ssf['url'] != null) ? '' : "data-toggle='collapse'"; ?> data-target="#<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>" aria-expanded="true" aria-controls="<?= str_replace('/', '', str_replace(' ', '', $ssf['tittle'])) ?>"><?= $ssf['tittle'] ?></a>
 
 
 										<?php
