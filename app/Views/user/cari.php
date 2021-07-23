@@ -45,18 +45,15 @@
                                         <?php $i = 1;
                                         foreach ($hasilCari as $hc) : ?>
                                             <?php
-                                            // $folderId = $hs['folder_id'];
-                                            // $subFolderId = $hs['sub_folder_id'];
-                                            // $subSubFolderId = $hs['sub_sub_folder_id'];
-                                            // $subSubSubFolderId = $hs['sub_sub_sub_folder_id'];
+                                            $id = $hc['id'];
                                             $db = \Config\Database::connect();
-                                            // if (!empty($hc['sub_folder_id'])) {
                                             $query = "SELECT `folder`.`tittle` as f, `sub_folder`.`tittle` as `sf`, `sub_sub_folder`.`tittle` as `ssf`, `sub_sub_sub_folder`.`tittle` as `sssf`
                                                             FROM `files`
                                                             LEFT JOIN `folder` ON `folder`.`id` = `folder_id`
                                                             LEFT JOIN `sub_folder` ON `sub_folder`.`id` = `sub_folder_id`
                                                             LEFT JOIN `sub_sub_folder` ON `sub_sub_folder`.`id` = `sub_sub_folder_id`
                                                             LEFT JOIN `sub_sub_sub_folder` ON `sub_sub_sub_folder`.`id` = `sub_sub_sub_folder_id`
+                                                            WHERE `files`.`id` = $id
                                                             ";
 
 

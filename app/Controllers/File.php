@@ -124,7 +124,7 @@ class File extends BaseController
         $result = $this->filesModel->query($query)->getResultArray();
 
         $data = [
-            'tittle' => 'Administrasi Bisnis',
+            'tittle' => 'Upload File',
             'files' => $result,
         ];
         return view('user/admin/file', $data);
